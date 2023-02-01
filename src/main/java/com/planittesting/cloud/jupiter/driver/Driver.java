@@ -280,14 +280,14 @@ public class Driver implements WebDriver {
         findVisibleElement(locator).clear();
     }
 
-    public void type(By locator, String text) {
+    public void sendKeys(By locator, String text) {
         log.info("Typing into: " + locator + " text: " + text);
         findVisibleElement(locator).sendKeys(String.valueOf(text));
     }
 
     public void clearAndType(By locator, String text) {
         clearField(locator);
-        type(locator, text);
+        sendKeys(locator, text);
     }
 
     public void typeIntoInvisibleField(By locator, String text) {
