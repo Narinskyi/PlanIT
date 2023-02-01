@@ -11,9 +11,9 @@ public class NavigationBar {
         return new ByChained(NAVBAR, By.xpath(String.format(NAVBAR_BUTTON, name)));
     }
 
-    private static final By HOME = buttonWithName("Home");
-    private static final By SHOP = buttonWithName("Shop");
-    private static final By CONTACT = buttonWithName("Contact");
-    private static final By LOGIN = buttonWithName("Login");
-    private static final By CART = buttonWithName("Cart");
+    public static final By HOME = buttonWithName("Home");
+    public static final By SHOP = buttonWithName("Shop");
+    public static final By CONTACT = buttonWithName("Contact");
+    public static final By LOGIN = buttonWithName("Login");
+    public static final By CART = buttonWithName("Cart");
 }
