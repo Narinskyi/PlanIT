@@ -67,32 +67,33 @@ I tend to structure the test suites into 'Functional' and 'Structural'.
 First would deal with all kinds of functional flows available in the application.
 Those tend to be based on state transition diagrams, decision tables etc. 
 It really depends on what kind of functionality is available and prioritised at the moment.
-Structural tests would address the UI elements without going deep into the functional details.
+Structural tests would address the UI elements without going deep into the functionality.
 
 In any case, good robust automation should be built following the testing pyramid principle.
-Including close interaction with dev team as to what's covered by unit tests and API tests where necessary
-to speed up and streamline the process of test data creation and validation.
+Close interaction with the dev team is essential. Some things might be already covered by unit tests for example.
+API tests and database queries could be used to speed up and streamline the process of fixtures creation and  data validations.
 
 > 2. Jupiter Toys is expected to grow and expand its offering into books, tech, and modern art. We are 
 expecting the of tests will grow to a very large number.
 >What approaches could you used to reduce overall execution time? 
 > 
-Again, following the testing pyramid is essential. 
-I like to adhere to KISS/DRY/SOLID principles which help immensely.
+Again, following the testing pyramid is of utmost importnace IMO. 
+I like to adhere to KISS/DRY/SOLID principles wherever possible.
 It also makes sense not to overemphasize automation as a quality control tool.
-It's a tool, not a means to an end.
+It's a tool, not a means to an end. 'Exhaustive testing is impossible'.
+Risk management and ongoing communication is essential in this regard.
 
 > 4. How will your framework cater for this? 
 > 
-It makes sense to maintain close interaction with the development pipeline.
-Both in terms od CI/CD and high visibility of automation impact and usability
-as well as integration with dev code where necessary. It helps to reduce code duplication
-and maintain the latest versions of data structures and settings of the application.
+It makes sense to maintain integration with the development pipeline.
+Both in terms od CI/CD and automation visibility/usability.
+If possible, I prefer to integrate with the dev codebase. It helps to reduce code duplication
+and maintain the latest versions of data structures and configuration files.
 
 > 5. Describe when to use a BDD approach to automation and when NOT to use BDD
 > 
-An honest answer would be to never use BDD. Why is a lengthy and almost philosophical discussion
-as to how the real vs ideal world operates. In short, it's just an overhead 
-for the test engineer to not only do the job but also make BAs happy.
+An honest answer would be to not use BDD. 'Why' is a lengthy and almost philosophical discussion
+as to how the real vs ideal world operates. In short, it's an overhead 
+for a test engineer to maintain two loosely coupled class hierarchies.
 
-I'm more than happy to go into more details during the interview if time allows.
+I'm more than happy to go into more details during the interview.
