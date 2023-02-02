@@ -4,6 +4,7 @@ import com.planittesting.cloud.jupiter.context.AbstractUITest;
 import com.planittesting.cloud.jupiter.data.component.Alert;
 import com.planittesting.cloud.jupiter.data.component.Input;
 import com.planittesting.cloud.jupiter.data.component.NavigationBar;
+import com.planittesting.cloud.jupiter.data.model.Item;
 import com.planittesting.cloud.jupiter.data.page.CartPage;
 import com.planittesting.cloud.jupiter.data.page.ContactPage;
 import com.planittesting.cloud.jupiter.data.page.ShopPage;
@@ -11,10 +12,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 
 public class TestSuite extends AbstractUITest {
@@ -78,26 +82,60 @@ public class TestSuite extends AbstractUITest {
         softly.assertAll();
     }
 
-    @Test
-    public void testCase3() {
+    @DataProvider(name = "items")
+    public Object[][] items() {
+        return new Object[][]{
+                {new Item("Funny Cow", 2), new Item("Fluffy Bunny", 1)},
+                {new Item("Stuffed Frog", 2), new Item("Fluffy Bunny", 2), new Item("Valentine Bear", 3)}
+        };
+    }
+
+    //After having implemented test case 4 I realized that test case 3 is redundant
+    @Test(dataProvider = "items")
+    public void testCase3_4(Item... items) {
         driver.clickOn(NavigationBar.SHOP);
 
-        driver.clickOn(ShopPage.Item.buyButtonFor("Funny Cow"));
-        driver.clickOn(ShopPage.Item.buyButtonFor("Funny Cow"));
-        driver.clickOn(ShopPage.Item.buyButtonFor("Fluffy Bunny"));
+        //Collect items prices and click buy
+        for (Item item : items) {
+            item.setPrice(driver.getElementText(
+                    ShopPage.Item.priceOf(item.getName())));
+
+            for (int i = 0; i < item.getQuantity(); i++) {
+                driver.clickOn(ShopPage.Item.buyButtonFor(item.getName()));
+            }
+        }
 
         driver.clickOn(NavigationBar.CART);
 
-        softly.assertTrue(parseInt(
-                driver.getElementText(CartPage.ITEMS_TOTAL_COUNT)) == 3);
+        //Verify total count of items
+        assertThat(parseInt(
+                        driver.getElementText(CartPage.ITEMS_TOTAL_COUNT)),
+                equalTo(
+                        Arrays.stream(items).map(Item::getQuantity).mapToInt(Integer::intValue).sum()));
 
-        softly.assertTrue(parseInt(
-                driver.getAttribute(
-                        CartPage.Item.quantityOf("Funny Cow"), "value")) == 2);
+        //For each item verify quantity, price, subtotal
+        for (Item item : items) {
+            assertThat(parseInt(
+                            driver.getAttribute(
+                                    CartPage.Item.quantityOf(item.getName()), "value")),
+                    equalTo(
+                            item.getQuantity()));
 
-        softly.assertTrue(parseInt(
-                driver.getAttribute(
-                        CartPage.Item.quantityOf("Fluffy Bunny"), "value")) == 2);
+            assertThat(
+                    driver.getElementText(
+                            CartPage.Item.priceOf(item.getName())),
+                    equalTo(item.getPriceString()));
 
+            assertThat(
+                    driver.getElementText(
+                            CartPage.Item.subtotalOf(item.getName())),
+                    equalTo(item.getSubtotalString()));
+        }
+
+        //Verify total price of all items
+        assertThat(parseDouble(
+                        driver.getElementText(CartPage.ITEMS_TOTAL_PRICE).replaceAll("Total: ", "")),
+                equalTo(
+                        Arrays.stream(items).map(Item::getSubtotalValue).mapToDouble(Double::doubleValue).sum()));
     }
 }
